@@ -15,6 +15,10 @@ import { PluginFactory } from "@polywrap/core-js";
 type NoConfig = Record<string, never>;
 
 const verifyUrlAllowed = (url: string, env: Env) => {
+  if(!env) {
+    return;
+  }
+  
   if(env.urlPrefixBlocklist && env.urlPrefixBlocklist.some(x => url.startsWith(x))) {
     throw new Error(`HttpPlugin: URL is on the blocklist: ${url}`);
   }
@@ -25,8 +29,8 @@ const verifyUrlAllowed = (url: string, env: Env) => {
 };
 
 export class HttpPlugin extends Module<NoConfig> {
-  public async get(args: Args_get, _client: Client, env: Env): Promise<Response | null> {
-    verifyUrlAllowed(args.url, env);
+  public async get(args: Args_get, _client: Client): Promise<Response | null> {
+    verifyUrlAllowed(args.url, this.env);
 
     const response = await axios.get<string>(
       args.url,
@@ -37,10 +41,9 @@ export class HttpPlugin extends Module<NoConfig> {
 
   public async post(
     args: Args_post,
-    _client: Client, 
-    env: Env
+    _client: Client
   ): Promise<Response | null> {
-    verifyUrlAllowed(args.url, env);
+    verifyUrlAllowed(args.url, this.env);
     
     const response = await axios.post(
       args.url,
