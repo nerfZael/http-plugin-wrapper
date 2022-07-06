@@ -18,13 +18,13 @@ const verifyUrlAllowed = (url: string, env: Env) => {
   if(!env) {
     return;
   }
+
+  if(env.urlPrefixWhitelist && env.urlPrefixWhitelist.length && !env.urlPrefixWhitelist.some(x => url.startsWith(x))) {
+    throw new Error(`HttpPlugin: URL is not on the whitelist: ${url}`);
+  }
   
   if(env.urlPrefixBlocklist && env.urlPrefixBlocklist.some(x => url.startsWith(x))) {
     throw new Error(`HttpPlugin: URL is on the blocklist: ${url}`);
-  }
-
-  if(env.urlPrefixWhitelist && !env.urlPrefixWhitelist.some(x => url.startsWith(x))) {
-    throw new Error(`HttpPlugin: URL is not on the whitelist: ${url}`);
   }
 };
 
