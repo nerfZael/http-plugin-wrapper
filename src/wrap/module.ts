@@ -9,12 +9,12 @@ import {
   MaybeAsync
 } from "@polywrap/core-js";
 
-export interface Args_get extends Record<string, unknown> {
+export interface Args_get {
   url: Types.String;
   request?: Types.Request | null;
 }
 
-export interface Args_post extends Record<string, unknown> {
+export interface Args_post {
   url: Types.String;
   request?: Types.Request | null;
 }
